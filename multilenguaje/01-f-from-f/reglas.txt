@@ -1,0 +1,3 @@
+gfortran f-main.f90 f-sum.f90 -o fmain.e
+
+

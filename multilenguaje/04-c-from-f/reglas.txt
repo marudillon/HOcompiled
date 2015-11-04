@@ -1,0 +1,47 @@
+Primero edito los .c y .h arreglando los problemas de decoradores y de punteros.
+Queda:
+
+#include <stdlib.h>
+#include "c-sum.h"
+
+void sum_abs_(int *in, int *num, int *sum) {
+   int i;
+   *sum = 0;
+
+   for (i=0; i < *num; ++i) {
+       *sum += abs(in[i]);
+   }
+   return;
+}
+
+Respecto a los punteros, tenes que indicarles con el * que es puntero, pero despues tenes que des-indicarle, porque sino en la funcion mira un lugar de memoria en vez de mirar el numero en si.
+En este caso tambien tenes que agregarle un argumento, porque en fortran tenes 3 argumentos en sum_abs pero aca en c tenias 2 argumentos. Por ultimo, como ya no te devuelve un entero (int) tenes que decirle void, porque no te devuelve nada. Esto tambien hay que cambiarlo en el .h. En el in[i] no le pones asterisco porque la notacion de corchetes ya te lo da como puntero.
+
+Despues compilo para obtener los objetos de cada uno:
+
+gcc -E c-sum.c -o c-sum.pp.c
+gcc -S c-sum.c -o c-sum.asm
+gcc -c c-sum.c -o c-sum.o
+
+gfortran -cpp -E f-main.f90 -o f-main.pp.f90
+gfortran -cpp -S f-main.f90 -o f-main.asm
+gfortran -cpp -c f-main.f90 -o f-main.o
+
+(no hace falta hacer los pasos -E y -S, se puede hacer directamente el -c)
+
+Chequeo con el nm de objetos:
+maru@tota:~/WTPC/HOcompiled/multilenguaje/04-c-from-f$ nm f-main.o
+         U _gfortran_set_args
+         U _gfortran_set_options
+         U _gfortran_st_write
+         U _gfortran_st_write_done
+         U _gfortran_transfer_character_write
+         U _gfortran_transfer_integer_write
+000000e1 T main
+00000000 t MAIN__
+00000014 r options.1.1837
+         U sum_abs_
+maru@tota:~/WTPC/HOcompiled/multilenguaje/04-c-from-f$ nm c-sum.o
+00000000 T sum_abs_
+
+
