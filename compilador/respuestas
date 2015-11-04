@@ -86,5 +86,5 @@ maru@tota:~/WTPC/HOcompiled/compilador$ nm calculator.e
 08048350 T __x86.get_pc_thunk.bx
 
 Los símbolos del ejecutable son un montón, e indican todo lo que se linkeo que es necesario para ejecutar.
-
+Hay una diferencia en el printf que es que en el ejecutable aunque sigue undefined pero te da la direccion de la libreria a la que tiene que linkear: U printf@GLIBC_2.0
 
