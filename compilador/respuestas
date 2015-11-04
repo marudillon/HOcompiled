@@ -1,0 +1,90 @@
+1. Lo que se espera en cada paso:
+
+*Pre-procesador: 
+Genera un archivo .pp.c que tiene los datos del include o los macros que se van a necesitar.
+Se hace con:
+gcc -E calculator.c -o calculator.pp.c
+Con esto ya quedan definidas las funciones y sus argumentos, aunque no explicita cómo trabaja
+
+*Compilacion I: Make assembler
+Genera el código de assembler (que sería un lenguaje intermedio para comunicarse directamente con la compu)
+Se hace con:
+gcc -S calculator.c -o calculator.asm
+Aca quedan las instrucciones.
+
+*Compilador II: Make object
+Genera los objetos en binario
+Se hace con:
+gcc -c calculator.c -o calculator.o
+Para ver lo que contiene el objeto:
+nm calculator.o
+Te devuelve distintas características del archivo, como ser si las variables son solo internas
+o si se las puede llamar desde afuera, entre otras cosas.
+
+*Linkeo:
+Genera el ejecutable a partir del binario.
+Se hace con:
+gcc -v calculator.c -o calculator.e
+Luego ya se puede ejecutar:
+./calculator.e 
+
+2. Luego de preprocesar se agrego el stdio.h completo (porque en el calculator.h estaba incluido)
+y luego lo que dice en el calculator.h
+y luego el calculator.c
+(mirando el final de calculator.pp.c)
+
+3. Las funciones en assembler son main y add_numbers (ambas terminan con ret, que sería el return)
+El resto son instrucciones propias de assembler
+
+4. Símbolos que se crean en el objeto:
+maru@tota:~/WTPC/HOcompiled/compilador$ nm calculator.o
+0000003c T add_numbers
+00000000 T main
+         U printf
+
+Los símbolos son solo 3: add_numbers, main y printf
+Los descriptores son T y U. T significa texto y U significa undefined (en este caso están todas en mayúscula con lo cual se puede acceder desde afuera)
+
+5. Símbolos que se crean en el ejecutable:
+maru@tota:~/WTPC/HOcompiled/compilador$ nm calculator.e
+08048459 T add_numbers
+0804a020 B __bss_start
+0804a020 b completed.6590
+0804a018 D __data_start
+0804a018 W data_start
+08048360 t deregister_tm_clones
+080483d0 t __do_global_dtors_aux
+08049f0c t __do_global_dtors_aux_fini_array_entry
+0804a01c D __dso_handle
+08049f14 d _DYNAMIC
+0804a020 D _edata
+0804a024 B _end
+080484e4 T _fini
+080484f8 R _fp_hw
+080483f0 t frame_dummy
+08049f08 t __frame_dummy_init_array_entry
+08048624 r __FRAME_END__
+0804a000 d _GLOBAL_OFFSET_TABLE_
+         w __gmon_start__
+080482b4 T _init
+08049f0c t __init_array_end
+08049f08 t __init_array_start
+080484fc R _IO_stdin_used
+         w _ITM_deregisterTMCloneTable
+         w _ITM_registerTMCloneTable
+08049f10 d __JCR_END__
+08049f10 d __JCR_LIST__
+         w _Jv_RegisterClasses
+080484e0 T __libc_csu_fini
+08048470 T __libc_csu_init
+         U __libc_start_main@@GLIBC_2.0
+0804841d T main
+         U printf@@GLIBC_2.0
+08048390 t register_tm_clones
+08048320 T _start
+0804a020 D __TMC_END__
+08048350 T __x86.get_pc_thunk.bx
+
+Los símbolos del ejecutable son un montón, e indican todo lo que se linkeo que es necesario para ejecutar.
+
+
